@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  postgres_service:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DATABASE: testbd
+    networks:
+      - 'test-network'
+
+  backend_service:
+    build:
+      dockerfile: ./Dockerfile
+    volumes:
+      - .:/src
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres_service
+    networks:
+      - 'test-network'
+
+networks:
+  test-network:
+    driver: bridge
